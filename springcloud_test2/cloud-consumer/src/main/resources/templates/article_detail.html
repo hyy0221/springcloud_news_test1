@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${article.name}"></title>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="/css/bulma.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/toggle.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <!-- <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"> -->
+            <strong>New Corporation</strong>
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">主页</a>
+            <a class="navbar-item" href="/articles/type/1">热门</a>
+            <a class="navbar-item" href="/articles/type/2">最新</a>
+            <a class="navbar-item" href="/articles/type/3">财经</a>
+            <a class="navbar-item" href="/articles/type/4">娱乐</a>
+            <a class="navbar-item" href="/articles/type/5">汽车</a>
+            <a class="navbar-item" href="/articles/type/6">体育</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">更多</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" href="/articles/type/13">购物</a>
+                    <a class="navbar-item" href="/articles/type/7">读书</a>
+                    <a class="navbar-item" href="/articles/type/12">星座</a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" href="/articles/type/8">综合</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <div th:if="${session.userId}">
+                        <a class="navbar-item" th:href="${'/usercenter/'+session.userId}">
+                            用户中心
+                        </a>
+                    </div>
+                    <div th:unless="${session.userId}">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a class="button is-primary" href="/register">
+                                    <strong>注册</strong>
+                                </a>
+                                <a class="button is-light" href="/login">
+                                    <strong>登录</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="section">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li>
+                <a th:href="'/articles/type/'+${article.type}"
+                   th:text="${article.type}">
+                    ${文章类型}
+                </a>
+            </li>
+            <li class="is-active">
+                <a href="#" aria-current="page" th:text="${article.name}">${文章标题}</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="columns">
+        <div class="column is-three-quarters">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4" th:text="${article.name}"></p>
+                            <p class="subtitle is-6" th:text="${article.author}">@作者</p>
+                        </div>
+                    </div>
+
+                    <div class="content" th:text="${article.content}">
+
+                    </div>
+                    <div class="content">
+                        <a>@news</a>.
+                        <a href="#" th:each="keyword:${article.keywords}">
+                            <!--                                    <span th:text="'#'+ ${keyword}"></span>-->
+                            <span class="tag is-primary"
+                                  style="margin-right:5px;"
+                                  th:text="'#'+ ${keyword}">
+                                    </span>
+                        </a>
+                        <br>
+                        <span th:text="${article.publishTime}"></span>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-top:20px;">
+                <div class="content">
+                    <h1>评论：
+                        <span class="is-small" th:text="'共'+ ${comment_num} + '条评论'"></span>
+                    </h1>
+
+                </div>
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-64x64">
+                            <img src="https://bulma.io/images/placeholders/128x128.png">
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <form th:action="${'/comment/'+article.id}" method="post">
+                                <div class="field">
+                                    <p class="control">
+                                        <input type="text" name="userId" th:value="${session.userId}" style="display:none;"/>
+                                        <textarea class="textarea" name="comment_content" placeholder="请写下你的评论......"></textarea>
+                                    </p>
+                                </div>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <button type="submit" class="button is-info">提交</button>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div style="padding-top:60px;">
+                <article class="media" th:each="comment:${comments}">
+                    <figure class="media-left">
+                        <p class="image is-48x48">
+                            <img src="https://bulma.io/images/placeholders/96x96.png">
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong th:text="${comment.author}"></strong>
+                                <br>
+                            <div th:text="${comment.content}"></div>
+                            <br>
+                            <small><a href="/comment_up">赞 - <span th:text="${comment.upNum}"></span></a> · <a href="/comment_down">踩 - <span th:text="${comment.downNum}"></span></a> · <a href="/comment_replay">回复</a> · 2 hrs</small>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="media-right">
+                        <form th:action="${'comment/delete/'+comment.id}" method="post">
+                            <button type="submit" class="delete"></button>
+                        </form>
+                    </div>
+                </article>
+                <!--                <article class="media">-->
+                <!--                    <figure class="media-left">-->
+                <!--                        <p class="image is-64x64">-->
+                <!--                            <img src="https://bulma.io/images/placeholders/128x128.png">-->
+                <!--                        </p>-->
+                <!--                    </figure>-->
+                <!--                    <div class="media-content">-->
+                <!--                        <div class="content">-->
+                <!--                            <p>-->
+                <!--                                <strong>Barbara Middleton</strong>-->
+                <!--                                <br> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.-->
+                <!--                                <br>-->
+                <!--                                <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>-->
+                <!--                            </p>-->
+                <!--                        </div>-->
+
+                <!--                        <article class="media">-->
+                <!--                            <figure class="media-left">-->
+                <!--                                <p class="image is-48x48">-->
+                <!--                                    <img src="https://bulma.io/images/placeholders/96x96.png">-->
+                <!--                                </p>-->
+                <!--                            </figure>-->
+                <!--                            <div class="media-content">-->
+                <!--                                <div class="content">-->
+                <!--                                    <p>-->
+                <!--                                        <strong>Sean Brown</strong>-->
+                <!--                                        <br> Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo-->
+                <!--                                        feugiat.-->
+                <!--                                        <br>-->
+                <!--                                        <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>-->
+                <!--                                    </p>-->
+                <!--                                </div>-->
+
+                <!--                                <article class="media">-->
+                <!--                                    Vivamus quis semper metus, non tincidunt dolor. Vivamus in mi eu lorem cursus ullamcorper sit amet nec massa.-->
+                <!--                                </article>-->
+
+                <!--                                <article class="media">-->
+                <!--                                    Morbi vitae diam et purus tincidunt porttitor vel vitae augue. Praesent malesuada metus sed pharetra euismod. Cras tellus odio, tincidunt iaculis diam non, porta aliquet tortor.-->
+                <!--                                </article>-->
+                <!--                            </div>-->
+                <!--                            <div class="media-right">-->
+                <!--                                <button class="delete"></button>-->
+                <!--                            </div>-->
+                <!--                        </article>-->
+
+                <!--                        <article class="media">-->
+                <!--                            <figure class="media-left">-->
+                <!--                                <p class="image is-48x48">-->
+                <!--                                    <img src="https://bulma.io/images/placeholders/96x96.png">-->
+                <!--                                </p>-->
+                <!--                            </figure>-->
+                <!--                            <div class="media-content">-->
+                <!--                                <div class="content">-->
+                <!--                                    <p>-->
+                <!--                                        <strong>Kayli Eunice </strong>-->
+                <!--                                        <br> Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices-->
+                <!--                                        posuere cubilia Curae; Phasellus lacinia non nisl id feugiat.-->
+                <!--                                        <br>-->
+                <!--                                        <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>-->
+                <!--                                    </p>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                            <div class="media-right">-->
+                <!--                                <button class="delete"></button>-->
+                <!--                            </div>-->
+                <!--                        </article>-->
+                <!--                    </div>-->
+                <!--                    <div class="media-right">-->
+                <!--                        <button class="delete"></button>-->
+                <!--                    </div>-->
+                <!--                </article>-->
+
+            </div>
+        </div>
+        <div class="column"></div>
+    </div>
+
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-4">
+                <div class="content">
+                    <p><strong>关于</strong></p>
+                </div>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">联系我们</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">关于我们</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">合作说明</a>
+                </p>
+            </div>
+            <div class="column is-4">
+                <div class="content">
+                    <p><strong>友情链接</strong></p>
+                </div>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">A网站</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">B网站</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">C网站</a>
+                </p>
+
+            </div>
+            <div class="column is-4">
+                <div class="content">
+                    <p><strong>其他</strong></p>
+                </div>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">官方微博</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">官方邮箱</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">投稿说明</a>
+                </p>
+
+            </div>
+        </div>
+        <div class="content">
+            <p>Copyright ©1996-2019 XXX Corporation, All Rights Reserved</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+
+</html>

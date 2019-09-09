@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户中心</title>
+    <link rel="stylesheet" href="/css/bulma.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/toggle.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <!-- <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"> -->
+            <strong>New Corporation</strong>
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">主页</a>
+            <a class="navbar-item" href="/articles/type/1">热门</a>
+            <a class="navbar-item" href="/articles/type/2">最新</a>
+            <a class="navbar-item" href="/articles/type/3">财经</a>
+            <a class="navbar-item" href="/articles/type/4">娱乐</a>
+            <a class="navbar-item" href="/articles/type/5">汽车</a>
+            <a class="navbar-item" href="/articles/type/6">体育</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">更多</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" href="/articles/type/13">购物</a>
+                    <a class="navbar-item" href="/articles/type/7">读书</a>
+                    <a class="navbar-item" href="/articles/type/12">星座</a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" href="/articles/type/8">综合</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div th:if="${session.userId}">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link" th:text="${'Hello,' + session.username}">
+                        </a>
+
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" th:href="${'/usercenter/'+session.userId}">
+                                用户中心
+                            </a>
+                            <div class="navbar-item" th:text="${'用户等级: '+session.user.level}">
+                            </div>
+                            <div class="navbar-item" th:text="${'用户权限: '+session.user.permission}">
+                            </div>
+                            <hr class="navbar-divider">
+                            <a class="navbar-item" th:href="${'/logout/' + session.userId}">
+                                退出
+                            </a>
+                            <a class="navbar-item">
+                                报告错误
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:unless="${session.userId}">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary" href="/register">
+                                <strong>注册</strong>
+                            </a>
+                            <a class="button is-light" href="/login">
+                                登录
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-one-fifth" style="border-right: 1px dashed #4a4a4a">
+                <aside class="menu">
+                    <h1 class="menu-label is-large">
+                        用户信息
+                    </h1>
+                    <ul class="menu-list">
+                        <li><a id="base_info">基本信息</a></li>
+                        <li><a id="change_password">修改密码</a></li>
+                    </ul>
+                    <!-- <h1 class="menu-label">
+                        发布文章
+                    </h1> -->
+                    <!-- <ul class="menu-list">
+                        <li><a>Team Settings</a></li>
+                        <li>
+                            <a class="is-active">Manage Your Team</a>
+                            <ul>
+                                <li><a>Members</a></li>
+                                <li><a>Plugins</a></li>
+                                <li><a>Add a member</a></li>
+                            </ul>
+                        </li>
+                        <li><a>Invitations</a></li>
+                        <li><a>Cloud Storage Environment Settings</a></li>
+                        <li><a>Authentication</a></li>
+                    </ul> -->
+                    <p class="menu-label">
+                        发布文章
+                    </p>
+                    <ul class="menu-list">
+                        <li><a id="edit_article">编辑文章</a></li>
+                        <li><a id="delete_article">删除文章</a></li>
+                        <li><a id="manage_article">管理评论</a></li>
+                    </ul>
+                    <p class="menu-label">
+                        账户信息
+                    </p>
+                    <ul class="menu-list">
+                        <li><a id="left_money">余额</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column is-half">
+                <div id="info-panel">
+                    <form action="">
+                        <div class="content">
+                            <h1 class="is-large">基础信息管理</h1>
+                        </div>
+                        <div class="field">
+                            <label class="label">用户名：</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="e.g Alex Smith">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">邮箱：</label>
+                            <div class="control">
+                                <input class="input" type="email" placeholder="e.g. alexsmith@gmail.com">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="button is-primary">
+                            修改信息
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+            <div class="base_info_form is-hidden">
+                <form th:action="'/user/update/'+${session.userId}" method="post">
+                    <div class="content">
+                        <h1 class="is-large">基础信息管理</h1>
+                    </div>
+                    <div class="field">
+                        <label class="label">用户名：</label>
+                        <div class="control">
+                            <input class="input" name="username" type="text" placeholder="e.g Alex Smith">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">邮箱：</label>
+                        <div class="control">
+                            <input class="input" name="email" type="email" placeholder="e.g. alexsmith@gmail.com">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button is-primary">
+                        修改信息
+                    </button>
+                </form>
+            </div>
+            <div class="change_password_form is-hidden">
+                <form th:action="'/changepwd/'+${session.userId}" method="post">
+                    <div class="content">
+                        <h1 class="is-large">修改密码</h1>
+                    </div>
+                    <div class="field">
+                        <label class="label">旧密码：</label>
+                        <div class="control">
+                            <input class="input" name="old_password" type="password" placeholder="e.g. alexsmith@gmail.com">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">新密码：</label>
+                        <div class="control">
+                            <input class="input" type="password" name="new_password" placeholder="e.g. alexsmith@gmail.com">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button is-primary">
+                        修改密码
+                    </button>
+                </form>
+            </div>
+            <div class="edit_article_form is-hidden">
+                <form action="/article/add" method="post">
+                    <div class="content">
+                        <h1 class="is-large">请编辑你的文章，之后点击完成即可发表！</h1>
+                    </div>
+                    <div class="field">
+                        <label class="label">用户名：</label>
+                        <div class="control">
+                            <input class="input" type="text" name="username" placeholder="e.g. 用户名">
+                        </div>
+                        <label class="label">文章类型：</label>
+                        <div>（请填入数字序号：3 - 财经，4 - 体育，5 - 汽车，6 - 体育，7 - 读书，8 - 其他，12 - 星座， 13 - 购物 ）</div>
+                        <div class="control">
+                            <input class="input" type="text" name="type" placeholder="e.g. 文章标题">
+                        </div>
+                        <label class="label">文章标题：</label>
+                        <div class="control">
+                            <input class="input" type="text" name="article_name" placeholder="e.g. 文章标题">
+                        </div>
+                        <label class="label">文章内容：</label>
+                        <div class="control">
+                            <textarea class="textarea" name="content" placeholder="文章内容" rows="50"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button is-primary">
+                        完成
+                    </button>
+                </form>
+            </div>
+            <div class="delete_article_form is-hidden">
+                <form action="">
+                    <div class="content">
+                        <h1 class="is-large">删除文章</h1>
+                    </div>
+                    <div class="field">
+                        列出所有文章
+                        <table class="table is-hoverable is-fullwidth">
+                            <tr th:each="article:${my_articles}">
+                                <td th:text="${article.id} +''+ ${article.name}"></td>
+                                <td style="text-align: right">
+                                    <form th:action="'/article/delete/'+${article.id}" method="post">
+                                        <button type="button" class="button is-danger">删除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="manage_article_form is-hidden">
+                <form action="">
+                    <div class="content">
+                        <h1 class="is-large">管理评论</h1>
+                    </div>
+                    <div class="field">
+                        <label class="label">列出所有自己的评论</label>
+                    </div>
+
+                    <button type="submit" class="button is-primary">
+                        修改
+                    </button>
+                </form>
+            </div>
+            <div class="left_money_form is-hidden">
+                <div class="content">
+                    <h1 class="is-large">余额</h1>
+                    <h1 class="is-large">￥&nbsp;&nbsp;0.00</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-4">
+                <div class="content">
+                    <p><strong>关于</strong></p>
+                </div>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">联系我们</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">关于我们</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">合作说明</a>
+                </p>
+            </div>
+            <div class="column is-4">
+                <div class="content">
+                    <p><strong>友情链接</strong></p>
+                </div>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">A网站</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">B网站</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">C网站</a>
+                </p>
+
+            </div>
+            <div class="column is-4">
+                <div class="content">
+                    <p><strong>其他</strong></p>
+                </div>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">官方微博</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">官方邮箱</a>
+                </p>
+                <p class="bd-footer-link">
+                    <a class="is-link-primary" href="">投稿说明</a>
+                </p>
+
+            </div>
+        </div>
+        <div class="content">
+            <p>Copyright ©1996-2019 XXX Corporation, All Rights Reserved</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function bindEvents() {
+
+        var infoPanel = document.querySelector('#info-panel')
+
+        var ids = [
+            '#base_info',
+            '#change_password',
+            '#edit_article',
+            '#delete_article',
+            '#manage_article',
+            '#left_money',
+        ]
+
+        var base_info = document.querySelector('#base_info');
+        var change_password = document.querySelector('#change_password');
+        var edit_article = document.querySelector('#edit_article');
+        var delete_article = document.querySelector('#delete_article');
+        var manage_article = document.querySelector('#manage_article');
+        var get_left_money = document.querySelector('#left_money');
+
+        var elems = [
+            base_info,
+            change_password,
+            edit_article,
+            delete_article,
+            manage_article,
+            get_left_money,
+        ]
+
+        elems.forEach(function(elem, k) {
+            elem.addEventListener('click', function() {
+                var className = '.' + ids[k].slice(1) + '_form'
+                var rightEl = document.querySelector(className)
+
+                // toggle is-hidden
+                infoPanel.innerHTML = rightEl.innerHTML;
+            })
+        })
+
+    }
+
+    function __main() {
+        bindEvents();
+    }
+
+    __main();
+</script>
+</body>
+
+</html>
